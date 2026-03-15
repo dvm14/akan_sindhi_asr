@@ -1,6 +1,9 @@
 # Use a lightweight Python 3.12 image
 FROM python:3.12-slim
 
+# Install ffmpeg (Required by Whisper for audio processing)
+RUN apt-get update && apt-get install -y ffmpeg
+
 # Set the working directory inside the container
 WORKDIR /app
 
