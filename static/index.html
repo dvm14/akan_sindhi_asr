@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multilingual ASR: Akan & Sindhi</title>
+    <style>
+        :root {
+            /* Your Custom Palette */
+            --cherry-rose: #A40E4C;
+            --space-indigo: #2C2C54;
+            --ash-grey: #ACC3A6;
+            --soft-apricot: #F5D6BA;
+            --tangerine-dream: #F49D6E;
+
+            /* App Theme Mapping */
+            --primary: var(--cherry-rose);
+            --bg: var(--ash-grey);
+            --card-bg: var(--soft-apricot);
+            --text: var(--space-indigo);
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+        h1, h2 { 
+            text-align: center; 
+            color: var(--space-indigo); 
+        }
+        .header-box {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.15);
+            margin-bottom: 2rem;
+        }
+        .header-box p {
+            margin: 0;
+            font-weight: 500;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+        }
+        button:hover { 
+            background-color: var(--tangerine-dream); 
+            color: var(--space-indigo);
+            transform: translateY(-1px);
+        }
+        button:disabled { 
+            background-color: #94a3b8; 
+            cursor: not-allowed; 
+        }
+        .secondary-btn {
+            background-color: var(--space-indigo);
+            color: white;
+        }
+        .output-box {
+            background: rgba(255, 255, 255, 0.6); 
+            padding: 1rem;
+            border-radius: 6px;
+            min-height: 80px;
+            margin-top: 1rem;
+            font-style: italic;
+            border-left: 4px solid var(--cherry-rose);
+            color: var(--space-indigo);
+            font-weight: 500;
+        }
+        .about-section {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.15);
+            line-height: 1.6;
+        }
+        .loader {
+            display: none;
+            font-size: 0.95rem;
+            color: var(--cherry-rose);
+            font-weight: bold;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-box">
+        <h1>Multilingual ASR Inference</h1>
+        <p style="text-align: center;">Real-time speech recognition for Akan and Sindhi.</p>
+    </div>
+
+    <div class="grid">
+        <div class="card" id="akan-card">
+            <h2>Akan Model</h2>
+            <button id="record-akan" onclick="toggleRecording('akan')">🎤 Start Recording</button>
+            <button class="secondary-btn" onclick="useSample('akan')">🎵 Use Sample Audio</button>
+            <div class="loader" id="loader-akan">Processing audio locally...</div>
+            <div class="output-box" id="output-akan">Transcription will appear here...</div>
+        </div>
+
+        <div class="card" id="sindhi-card">
+            <h2>Sindhi Model</h2>
+            <button id="record-sindhi" onclick="toggleRecording('sindhi')">🎤 Start Recording</button>
+            <button class="secondary-btn" onclick="useSample('sindhi')">🎵 Use Sample Audio</button>
+            <div class="loader" id="loader-sindhi">Processing audio locally...</div>
+            <div class="output-box" id="output-sindhi">Transcription will appear here...</div>
+        </div>
+    </div>
+
+    <div class="about-section">
+        <h2>About This Project</h2>
+        <p>This application serves as a proof-of-concept for deploying Automatic Speech Recognition (ASR) models for low-resource languages, specifically Akan and Sindhi. The models were fine-tuned on the Whisper architecture.</p>
+        <p><strong>Architecture:</strong> A custom HTML/JS frontend styled with a warm, modern palette, communicating with a FastAPI backend. The backend utilizes the <code>transformers</code> library to perform local, on-server model inference without relying on external APIs.</p>
+    </div>
+</div>
+
+<script>
+    let mediaRecorder;
+    let audioChunks = [];
+    let isRecording = false;
+
+    async function toggleRecording(language) {
+        const btn = document.getElementById(`record-${language}`);
+        
+        if (!isRecording) {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    await sendAudioToBackend(audioBlob, language);
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+                btn.innerText = "⏹ Stop Recording";
+                // Changes to Tangerine Dream when recording
+                btn.style.backgroundColor = "var(--tangerine-dream)"; 
+                btn.style.color = "var(--space-indigo)";
+            } catch (err) {
+                alert("Microphone access denied or not available.");
+            }
+        } else {
+            mediaRecorder.stop();
+            isRecording = false;
+            btn.innerText = "🎤 Start Recording";
+            // Reverts back to Cherry Rose
+            btn.style.backgroundColor = "var(--cherry-rose)";
+            btn.style.color = "white";
+            mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        }
+    }
+
+    async function useSample(language) {
+        const sampleUrl = `./samples/${language}.wav`; 
+        try {
+            const response = await fetch(sampleUrl);
+            const blob = await response.blob();
+            await sendAudioToBackend(blob, language);
+        } catch (error) {
+            alert("Sample audio not found. Please ensure it is in the correct directory.");
+        }
+    }
+
+    async function sendAudioToBackend(audioBlob, language) {
+        const loader = document.getElementById(`loader-${language}`);
+        const outputBox = document.getElementById(`output-${language}`);
+        
+        loader.style.display = "block";
+        outputBox.innerText = "";
+
+        const formData = new FormData();
+        formData.append("file", audioBlob, "recording.wav");
+
+        try {
+            const response = await fetch(`/api/transcribe/${language}`, {
+                method: "POST",
+                body: formData
+            });
+            const data = await response.json();
+            
+            if (data.transcription) {
+                outputBox.innerText = data.transcription;
+            } else if (data.error) {
+                outputBox.innerText = `Error: ${data.error}`;
+            }
+        } catch (error) {
+            outputBox.innerText = "Failed to connect to the server.";
+        } finally {
+            loader.style.display = "none";
+        }
+    }
+</script>
+</body>
+</html>
