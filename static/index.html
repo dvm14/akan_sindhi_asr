@@ -154,8 +154,8 @@
 
     <div class="about-section">
         <h2>About This Project</h2>
-        <p>This application serves as a proof-of-concept for deploying Automatic Speech Recognition (ASR) models for low-resource languages, specifically Akan and Sindhi. The models were fine-tuned on the Whisper architecture.</p>
-        <p><strong>Architecture:</strong> A custom HTML/JS frontend styled with a warm, modern palette, communicating with a FastAPI backend. The backend utilizes the <code>transformers</code> library to perform local, on-server model inference without relying on external APIs.</p>
+        <p>This application serves as a proof-of-concept for deploying Automatic Speech Recognition (ASR) models for low-resource languages, specifically Akan and Sindhi. To achieve this, we fine-tuned the Hugging Face whisper-small architecture using audio data sourced from the FLEURS dataset for Sindhi and the google/WaxalNLP dataset for Akan. A critical challenge we solved was configuring the pipeline to utilize specialized, fast tokenizers natively within a customized Docker environment, ensuring highly accurate and efficient text decoding. The final product features a FastAPI backend running local machine learning inference, connected to a responsive, custom-styled frontend deployed seamlessly via Railway.</p>
+
     </div>
 </div>
 
