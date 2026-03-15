@@ -13,11 +13,11 @@
             --soft-apricot: #F5D6BA;
             --tangerine-dream: #F49D6E;
 
-            /* App Theme Mapping */
-            --primary: var(--cherry-rose);
-            --bg: var(--ash-grey);
-            --card-bg: var(--soft-apricot);
-            --text: var(--space-indigo);
+            /* Dark Mode Theme Mapping */
+            --bg: var(--space-indigo);
+            --card-bg: rgba(172, 195, 166, 0.1); /* Ash grey at 10% opacity for sleek glass cards */
+            --text: var(--soft-apricot);
+            --primary: var(--tangerine-dream);
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -35,14 +35,15 @@
         }
         h1, h2 { 
             text-align: center; 
-            color: var(--space-indigo); 
+            color: var(--ash-grey); /* Light green/grey for crisp headings */
         }
         .header-box {
             background-color: var(--card-bg);
             padding: 1.5rem;
             border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.15);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             margin-bottom: 2rem;
+            border: 1px solid rgba(245, 214, 186, 0.1);
         }
         .header-box p {
             margin: 0;
@@ -57,45 +58,53 @@
             background: var(--card-bg);
             padding: 2rem;
             border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.15);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(245, 214, 186, 0.1);
             display: flex;
             flex-direction: column;
             gap: 1rem;
         }
         button {
             background-color: var(--primary);
-            color: white;
+            color: var(--space-indigo); /* Dark text on the bright orange button */
             border: none;
             padding: 0.75rem 1rem;
             border-radius: 6px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: bold;
             font-size: 1rem;
             transition: all 0.2s ease-in-out;
-            box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+            box-shadow: 0 2px 8px rgba(244, 157, 110, 0.3);
         }
         button:hover { 
-            background-color: var(--tangerine-dream); 
-            color: var(--space-indigo);
+            background-color: var(--ash-grey); 
             transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(172, 195, 166, 0.4);
         }
         button:disabled { 
-            background-color: #94a3b8; 
+            background-color: rgba(255, 255, 255, 0.2); 
+            color: rgba(255, 255, 255, 0.5);
             cursor: not-allowed; 
+            box-shadow: none;
         }
         .secondary-btn {
-            background-color: var(--space-indigo);
+            background-color: var(--cherry-rose);
+            color: white;
+            box-shadow: 0 2px 8px rgba(164, 14, 76, 0.3);
+        }
+        .secondary-btn:hover {
+            background-color: #c9125d; /* Slightly brighter cherry on hover */
             color: white;
         }
         .output-box {
-            background: rgba(255, 255, 255, 0.6); 
+            background: rgba(0, 0, 0, 0.25); 
             padding: 1rem;
             border-radius: 6px;
             min-height: 80px;
             margin-top: 1rem;
             font-style: italic;
-            border-left: 4px solid var(--cherry-rose);
-            color: var(--space-indigo);
+            border-left: 4px solid var(--tangerine-dream);
+            color: var(--soft-apricot);
             font-weight: 500;
         }
         .about-section {
@@ -103,13 +112,14 @@
             padding: 2rem;
             background: var(--card-bg);
             border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.15);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(245, 214, 186, 0.1);
             line-height: 1.6;
         }
         .loader {
             display: none;
             font-size: 0.95rem;
-            color: var(--cherry-rose);
+            color: var(--tangerine-dream);
             font-weight: bold;
             text-align: center;
             margin-top: 0.5rem;
