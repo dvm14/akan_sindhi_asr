@@ -13,8 +13,7 @@ print("Loading ASR models into memory... This might take a minute.")
 # We load the models using your exact Hugging Face repository IDs
 sindhi_pipe = pipeline("automatic-speech-recognition", model="dvm14/whisper-small-sindhi")
 
-# Double-check that this is your correct Akan model ID!
-akan_pipe = pipeline("automatic-speech-recognition", model="dvm14/whisper-small-akan") 
+akan_pipe = pipeline("automatic-speech-recognition", model="tiffany101/whisper-twi-v2") 
 print("Models loaded successfully!")
 
 @app.post("/api/transcribe/{language}")
