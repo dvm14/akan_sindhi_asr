@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 from transformers import pipeline
 import tempfile
+import asyncio
 import os
 
 app = FastAPI()
@@ -24,18 +25,16 @@ async def transcribe(language: str, file: UploadFile = File(...)):
     try:
         audio_bytes = await file.read()
         
-        # Save the audio to a temporary file so transformers can process it cleanly
         with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
             tmp.write(audio_bytes)
             tmp_path = tmp.name
             
-        # Select the correct pipeline
         pipe = sindhi_pipe if language == "sindhi" else akan_pipe
         
-        # Run the actual inference locally!
-        result = pipe(tmp_path)
+        # THE FIX: Run the heavy inference in a background thread
+        # This prevents the web server from freezing!
+        result = await asyncio.to_thread(pipe, tmp_path)
         
-        # Clean up the temporary file
         os.remove(tmp_path)
         
         return {"transcription": result["text"]}
