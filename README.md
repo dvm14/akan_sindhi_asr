@@ -79,6 +79,16 @@ akan_sindhi_asr/
 
 ---
 
+## Datasets
+
+We loaded the datasets for each language through hugging face from these dataset links:
+- Akan: https://huggingface.co/datasets/google/WaxalNLP under subset "aka_asr"
+- Sindhi: https://huggingface.co/datasets/google/fleurs under "sd_in"
+
+(We did not need to keep the data locally)
+
+---
+
 ## Pretrained Models
 
 Fine-tuned Whisper models trained during this project are available on Hugging Face.
