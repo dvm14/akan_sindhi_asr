@@ -139,7 +139,7 @@ As a simple baseline, the system outputs a random transcription from the trainin
 
 ### Deep Learning Model
 
-We fine-tuned **Whisper-small**, a transformer-based encoder-decoder architecture designed for automatic speech recognition. Fine-tuning allows the model to adapt to low-resource languages such as Akan and Sindhi.
+We fine-tuned **Whisper-small**, a transformer-based encoder-decoder architecture designed for automatic speech recognition. Fine-tuning allows the model to adapt to low-resource languages such as Akan and Sindhi. We referenced this link on using transformers (Whisper-small) for ASR: https://colab.research.google.com/github/sanchit-gandhi/notebooks/blob/main/fine_tune_whisper.ipynb
 
 ---
 
